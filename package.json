@@ -1,0 +1,22 @@
+{
+  "name": "searchmovie",
+  "version": "1.0.0",
+  "description": "1. Set the project\r a) Download the project and execute indexhtml\r b) Enter in Git Pages:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrianoosses/movieSearch.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adrianoosses/movieSearch/issues"
+  },
+  "homepage": "https://github.com/adrianoosses/movieSearch#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
