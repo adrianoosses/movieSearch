@@ -5,23 +5,41 @@ const router = express.Router();
 // GESTION DE USUARIO
 
 class User{
-    constructor(name, pass){
+    constructor(name, pass, role){
         this.name = name;
         this.pass = pass;
+        this.role = role;
         this.order = null;
+        
     }
 }
-let usersArray = [];
+let currentUser = null;
+let adriano = new User("adriano", "123456", "admin");
+let adrianoString = JSON.stringify(adriano);
+let adrianoParse = JSON.parse(adrianoString);
+let usersArray = []
+usersArray.push(adrianoParse);
+
+
+
 
 let addUser = (newUser) =>{
-    usersArray.push(newUser);
+    if(currentUser === "admin"){
+        console.log("current user: "+JSON.stringify(currentUser));
+        usersArray.push(newUser);
+        return true;
+    } else return false;
 };
 
 
 router.post('/addUser', (req, res) =>{
     console.log("user name: "+ req.body.name);
-    addUser(new User(req.body.name, req.body.password))
-    res.json({"message":"Usuario añadido."});
+    if(addUser(new User(req.body.name, req.body.password, req.body.role))){
+        res.json({"message":"User added."});
+    }else{
+        res.json({"message":"denied"});
+    };
+    
 });
 
 let getUsers = () => {
@@ -39,13 +57,14 @@ router.get('/getUsers', (req, res) =>{
 });
 
 let getUserByName = (nameUser) =>{
-    user = usersArray.find((item) => item.name = nameUser);
+    console.log("usersArray", usersArray);
+    user = usersArray.find((item) => item.name === nameUser);
     return user;
 }
 
 // Endpoint de Baja de usuario (D) -> DELETE
 let deleteUser = (name) => {
-    let index = usersArray.findIndex((item) => item.name == name);
+    let index = usersArray.findIndex((item) => item.name === name);
     usersArray.splice(index, 1);
 }
 
@@ -57,25 +76,19 @@ router.delete('/unsubscribeUser', (req, res) =>{
 
 let login = (name, password) =>{
     //console.log("objs het usr",getUserByName(name))
-    
-    if(getUserByName(name) !== undefined){
-        console.log("obj get", getUserByName(name));
-        console.log("pass get",getUserByName(name).pass);
-        console.log("pass param",password);
-        console.log("existe");
-        if(getUserByName(name).pass === password){
-            
-            console.log("Correct password");
-            return true;
-        }else{
-            console.log("Wrong user or password ");
-            return false;
-        }
+    let usrLoginString = JSON.stringify(getUserByName(name));
+    console.log("Nombre BUSCADO:" + name);
+    console.log("usrLoginString:" + usrLoginString);
+    if(usrLoginString !== undefined && usrLogin.pass === password){
+        let usrLogin = JSON.parse(usrLoginString);
+        console.log("Correct password");
+        currentUser = usrLogin.role;
+        console.log("ROLE:" + usrLogin.role);
+        return true;
     }else{
-        console.log("no existe");
+        console.log("Wrong user or password ");
         return false;
     }
-    
 }
 
 router.get('/login', (req, res) =>{
