@@ -5,6 +5,7 @@ const router = express.Router();
 let usr = require('./routes/users.js');
 let mv = require('./routes/movies.js');
 let or = require('./routes/orders.js');
+
 let bodyParser = require('body-parser')
 app.use(bodyParser.json());
 
@@ -21,10 +22,10 @@ app.use(bodyParser.json());
 
 
 // Endpoint de Alta de Usuario (C)create -> POST
-// todos los q empiecen por /tal entrn ahi
+// todos los q empiecen por /tal entran ahi
 app.use('/users', usr.routes);
 app.use('/movies', mv.routes);
-app.use('/orders', mv.routes);
+app.use('/orders', or.routes);
 
 
 ////////////////////////////////////////////////////////////////////////////////

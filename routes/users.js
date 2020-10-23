@@ -10,9 +10,9 @@ class User{
         this.pass = pass;
         this.role = role;
         this.order = null;
-        
     }
 }
+
 let currentUser = null;
 let adriano = new User("adriano", "123456", "admin");
 let adrianoString = JSON.stringify(adriano);
@@ -21,11 +21,8 @@ let usersArray = []
 usersArray.push(adrianoParse);
 
 
-
-
 let addUser = (newUser) =>{
-    if(currentUser === "admin"){
-        console.log("current user: "+JSON.stringify(currentUser));
+    if(currentUser.role === "admin" && getUserByName(newUser.name) === false){
         usersArray.push(newUser);
         return true;
     } else return false;
@@ -33,31 +30,21 @@ let addUser = (newUser) =>{
 
 
 router.post('/addUser', (req, res) =>{
-    console.log("user name: "+ req.body.name);
-    if(addUser(new User(req.body.name, req.body.password, req.body.role))){
-        res.json({"message":"User added."});
-    }else{
-        res.json({"message":"denied"});
-    };
-    
+    let msg = (addUser(new User(req.body.name, req.body.password, req.body.role)))?"User added.":"denied";
+    res.json({"message":msg}); 
 });
 
 let getUsers = () => {
-    //let arr = []
-    //for(let i = 0; i < usersArray.length ; i++) arr.push(usersArray[i].name);
     return usersArray;
 }
 
 // Endpoint de Perfil (R)read -> GET
 router.get('/getUsers', (req, res) =>{
     let users = getUsers();
-    console.log(users);
-    //console.log("orders users: " + users[0].order.dateRent);
     res.json(users); 
 });
 
 let getUserByName = (nameUser) =>{
-    console.log("usersArray", usersArray);
     user = usersArray.find((item) => item.name === nameUser);
     return user;
 }
@@ -75,20 +62,18 @@ router.delete('/unsubscribeUser', (req, res) =>{
 });
 
 let login = (name, password) =>{
-    //console.log("objs het usr",getUserByName(name))
     let usrLoginString = JSON.stringify(getUserByName(name));
-    console.log("Nombre BUSCADO:" + name);
-    console.log("usrLoginString:" + usrLoginString);
-    if(usrLoginString !== undefined && usrLogin.pass === password){
+    if(usrLoginString !== undefined){
         let usrLogin = JSON.parse(usrLoginString);
-        console.log("Correct password");
-        currentUser = usrLogin.role;
-        console.log("ROLE:" + usrLogin.role);
-        return true;
-    }else{
-        console.log("Wrong user or password ");
-        return false;
+        if(usrLogin.pass === password){
+            exports.cu = usrLogin;
+            return true;
+        }else{
+            console.log("Wrong user or password ");
+            return false;
+        }
     }
+    
 }
 
 router.get('/login', (req, res) =>{
@@ -101,6 +86,6 @@ router.get('/login', (req, res) =>{
     } 
 });
 
-// 127.0.0.1:3000/?marico=picachu
-//JSON.stringify()
+console.log("Antes de salir: "+currentUser)
+
 exports.routes = router;

@@ -1,41 +1,48 @@
 const express = require('express');
 const app = express();
 const router = express.Router();
+const usr = require('../routes/users.js');
 
 //GESTION DE PEDIDOS
 class Order{
-    constructor(movie, dateRent, dateRefund){
-        this.movie = movie;
+    constructor(userId, movieId, dateRent, dateRefund){
+        this.userId = userId;
+        this.movie = movieId;
         this.dateRent = dateRent;
         this.dateRefund = dateRefund;
     }
 }
 let orderArray = [];
-
+let currentUser = usr.cu;
+console.log("currentUser"+currentUser)
 // Endpoint para crear pedido -> POST
-let createOrder = (userName, movieId, dateRent, dateRefund) =>{
-    let movieById = getMovieById(movieId);
-    console.log("movieById" + movieById);
-    let userByName = getUserByName(userName);
-    console.log("user:" + userByName.name);
+let createOrder = (userId, movieId, dateRent, dateRefund) =>{
+    orderArray.push(new Order(userId, movieId, dateRent, dateRefund));
+    return true;
+    //let movieById = getMovieById(movieId);
+    //console.log("movieById" + movieById);
+    //let userByName = getUserByName(userName);
+    //console.log("user:" + userByName.name);
+    /*
     if(userByName.order === null){
-        userByName.order = new Order(movieById, dateRent, dateRefund);
+        userByName.order = new Order(userId, movieId, dateRent, dateRefund);
         return 1;
     }else{
         return -1;
-    }
+    }*/
 }
 
 router.post('/addOrder', (req, res) =>{
-    let userName = req.body.name;
-    let movieId = req.body.id;
+    let movieId = req.body.movieId;
     let dateRent = req.body.dateRent;
     let dateRefund = req.body.dateRefund;
-
-    if(createOrder(userName, movieId, dateRent, dateRefund) === 1){
-        res.send("Order added");
+    let currentUserCreate = usr.cu;
+    if(currentUserCreate !== undefined){
+        let userId = (currentUserCreate.role === "admin")? req.body.userId: currentUserCreate.id;
+        if(createOrder(userId, movieId, dateRent, dateRefund)) res.send("Order added"); 
+        else res.send("The user have an order already."); 
     }else{
-        res.send("The user have an order already."); 
+        res.send("No user logeed."); 
     }
 })
 
