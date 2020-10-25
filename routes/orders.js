@@ -13,12 +13,20 @@ class Order{
     }
 }
 let orderArray = [];
-let currentUser = usr.cu;
-console.log("currentUser"+currentUser)
+//console.log("currentUser"+currentUser)
 // Endpoint para crear pedido -> POST
 let createOrder = (userId, movieId, dateRent, dateRefund) =>{
-    orderArray.push(new Order(userId, movieId, dateRent, dateRefund));
-    return true;
+    let user = usr.getUserById(userId);
+    //console.log("user create order: " + user);
+    let order = new Order(userId, movieId, dateRent, dateRefund)
+    if(user.order === null){
+        orderArray.push(order);
+        user.order = order;
+        return true;
+    }else{
+        return false;
+    }
+    
     //let movieById = getMovieById(movieId);
     //console.log("movieById" + movieById);
     //let userByName = getUserByName(userName);
@@ -34,9 +42,15 @@ let createOrder = (userId, movieId, dateRent, dateRefund) =>{
 
 router.post('/addOrder', (req, res) =>{
     let movieId = req.body.movieId;
-    let dateRent = req.body.dateRent;
-    let dateRefund = req.body.dateRefund;
+    //let dateRent = req.body.dateRent;
+    let dateRent = new Date();
+    let daysToRent = 7;
+    let dateRefund = new Date(dateRent);
+    //let dateRefund = dateRefundAux.setDate(dateRent.getDate() + daysToRent);
+    dateRefund.setDate(dateRent.getDate() + daysToRent);
+    //let dateRefund = req.body.dateRefund;
     let currentUserCreate = usr.cu;
+    //console.log("currentUser: " + usr.cu);
     if(currentUserCreate !== undefined){
         let userId = (currentUserCreate.role === "admin")? req.body.userId: currentUserCreate.id;
         if(createOrder(userId, movieId, dateRent, dateRefund)) res.send("Order added"); 
@@ -45,5 +59,10 @@ router.post('/addOrder', (req, res) =>{
         res.send("No user logeed."); 
     }
 })
+
+router.get('/getOrders', (req, res) =>{
+    console.log(orderArray);
+    res.json({'orders':orderArray});
+} )
 
 exports.routes = router;
