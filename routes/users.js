@@ -81,13 +81,17 @@ function setUserId(user){
 // Endpoint de Baja de usuario (D) -> DELETE
 let deleteUser = (name) => {
     let index = usersArray.findIndex((item) => item.name === name);
-    usersArray.splice(index, 1);
+    if(currentUser.role === "admin"){
+        usersArray.splice(index, 1);
+        return true;
+    }else return false;
 }
 
 router.delete('/unsubscribeUser', (req, res) =>{
     let name = req.body.name;
-    deleteUser(name);
-    res.send(name + " eliminado"); 
+    let msg =  name + " eliminado";
+    if(deleteUser(name)) res.json({"msg" : msg});
+    else res.send("Unauthorized"); 
 });
 
 let login = (name, password) =>{

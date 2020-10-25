@@ -14,21 +14,10 @@ app.use(bodyParser.json());
 // Vista: html css de la pagina ppal
 
 
-// form urlencoded
-//let user = require('./user.js');
-
-
-
-
-
-// Endpoint de Alta de Usuario (C)create -> POST
-// todos los q empiecen por /tal entran ahi
 app.use('/users', usr.routes);
 app.use('/movies', mv.routes);
 app.use('/orders', or.routes);
 
-
-////////////////////////////////////////////////////////////////////////////////
 
     
 
@@ -36,11 +25,8 @@ app.use('/orders', or.routes);
 // MongoDB
 
 
-
-//app.get('/', (req, res, next) => { res.send("<h1>Hola mundo</h1><p>usuarios</p>")});
 app.get('/', (req, res) => { res.send(`
-    <h1>Hola mundo</h1>
-    <p>Usuarios</p>`
+    <h1>Hola mundo</h1>`
     )});
 
 app.listen(3000, () => console.log("Sever running"));

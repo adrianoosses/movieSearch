@@ -16,8 +16,10 @@ let orderArray = [];
 //console.log("currentUser"+currentUser)
 // Endpoint para crear pedido -> POST
 let createOrder = (userId, movieId, dateRent, dateRefund) =>{
-    let user = usr.getUserById(userId);
-    //console.log("user create order: " + user);
+    let user = usr.getUserById(parseInt(userId));
+    console.log("user create order: " + userId);
+    console.log("type of order: " + typeof(userId));
+    console.log("user: " + user)
     let order = new Order(userId, movieId, dateRent, dateRefund)
     if(user.order === null){
         orderArray.push(order);
