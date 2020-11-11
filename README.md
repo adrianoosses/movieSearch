@@ -1,6 +1,6 @@
 # MOVIE SERVICE
 ## Instrucciones
-GitHub Page: https://adrianoosses.github.io/movieService/
+GitHub Page: https://adrianoosses.github.io/movieService/ <br>
 Heroku: https://movie-service-1.herokuapp.com/
 ### Instalación del entorno
 1) Descargue el proyecto.
